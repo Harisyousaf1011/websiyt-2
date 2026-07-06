@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>For Aisha</title>
+  <style>
+    body { background-color: #121212; color: white; font-family: 'Courier New', monospace; text-align: center; margin-top: 80px; padding: 20px; }
+    h1 { color: #ff4d4d; font-size: 28px; }
+    input[type="text"] { width: 85%; padding: 15px; font-size: 18px; border: 2px solid #ff4d4d; background: #222; color: white; border-radius: 10px; outline: none; }
+    button { background-color: #ff4d4d; color: white; padding: 15px 30px; font-size: 18px; border: none; border-radius: 10px; margin-top: 20px; width: 85%; cursor: pointer; font-weight: bold; }
+    button:active { background-color: #cc0000; }
+    p { color: #888; margin-top: 30px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>Send a message <3</h1>
+  <input type="text" id="msgBox" maxlength="30" placeholder="Type something sweet...">
+  <br>
+  <button onclick="sendMsg()">Send to Screen</button>
+  <p>Sent from my heart to your screen</p>
+
+  <script>
+    const dbUrl = "https://moin-df879-default-rtdb.europe-west1.firebasedatabase.app/message.json";
+
+    function sendMsg() {
+      const text = document.getElementById("msgBox").value.trim();
+      if (text.length === 0) return;
+
+      // Change button text so she knows it sent
+      const btn = document.querySelector("button");
+      btn.innerText = "Sending...";
+      btn.style.backgroundColor = "#888";
+
+      fetch(dbUrl, {
+        method: "PUT", // Overwrites the old message
+        body: JSON.stringify({ text: text })
+      })
+      .then(() => {
+        document.getElementById("msgBox").value = "";
+        btn.innerText = "Sent! <3";
+        setTimeout(() => { btn.innerText = "Send to Screen"; btn.style.backgroundColor = "#ff4d4d"; }, 1500);
+      })
+      .catch(() => {
+        btn.innerText = "Error! Check internet";
+        setTimeout(() => { btn.innerText = "Send to Screen"; btn.style.backgroundColor = "#ff4d4d"; }, 1500);
+      });
+    }
+  </script>
+</body>
+</html>
